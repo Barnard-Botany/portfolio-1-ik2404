@@ -1,0 +1,79 @@
+---
+title: "Portfolio 1, Part 1.4"
+output: html_notebook
+---
+1. MAPS
+ I mapped the range and occurrence data for Solanum pimpinellifolium (my plant species) and Solanum lycopersicum (common tomato plant). 
+
+```{r}
+library("BIEN")
+library(ape) #Package for working with phylogenies in R
+library(maps) #Useful for making quick maps of occurrences
+library(sp) # A package for spatial data
+```
+
+My species is Solanum pimpinellifolium (common name= currant tomato), which is the ancestor of the common tomato plant (Solanum lycopersicum). Below is a map of the range and occurrence. 
+```{r}
+curranttomato_rangemap <- BIEN_ranges_load_species("Solanum_pimpinellifolium")
+Solanum_pimpinellifolium<- BIEN_occurrence_species(species = "Solanum pimpinellifolium")
+map('world', fill=T, col="grey", bg="light blue", xlim=c(-180,-20), ylim=c(-60, 80))
+plot(curranttomato_rangemap, col="green", add=T)
+points(cbind(Solanum_pimpinellifolium$longitude, Solanum_pimpinellifolium$latitude), col="blue", pch=20, cex=1)
+```
+This map is very similar to the one published on the NYBG and the BIEN website. In Tomatoland, the author traveled to South America (specifically Peru) to find Solanum pimpinellifolium and it makes sense because most of the Solanum pimpinellifolium is in that area.
+
+My other species is Solanum lycopersicum, which is the common tomato plant. Below is a map of the range and occurrence.
+```{r}
+commontomato_rangemap <- BIEN_ranges_load_species("Solanum_lycopersicum")
+Solanum_lycopersicum<- BIEN_occurrence_species(species = "Solanum lycopersicum")
+map('world', fill=T, col="grey", bg="light blue", xlim=c(-180,-20), ylim=c(-60, 80))
+plot(commontomato_rangemap, col="green", add=T)
+points(cbind(Solanum_lycopersicum$longitude, Solanum_lycopersicum$latitude), col="blue", pch=20, cex=1)
+```
+WOAH! The range and occurrence for Solanum lycopersicum is so much wider than Solanum pimpinellifolium. This makes sense because the Solanum lycopersicum strain is the common tomato plant that everyone eats and it has been created so it can be domesticated worldwide. Solanum pimpinellifolium however can only grow in dry climates, which is why it's growth is mostly confined to South America. 
+
+
+
+2. WORKING WITH TRAIT DATA
+The species I am studying are Persea americana and Persea borbonia. The trait I will be looking at is whole plant height, since there is a lot of data for whole plant height for both of these species (which will make it easier to make a decent boxplot)
+```{r}
+Persea_americana_traits <- BIEN_trait_traitbyspecies(trait = "whole plant height", species= "Persea americana")
+str(Persea_americana_traits)
+Persea_americana_traits
+```
+
+
+```{r}
+Persea_borbonia_traits <- BIEN_trait_traitbyspecies(trait = "whole plant height", species= "Persea borbonia")
+str(Persea_borbonia_traits)
+Persea_borbonia_traits
+```
+
+I will now find the mean whole plant height of Persea americana
+```{r}
+americana= Persea_americana_traits[c(3)]
+americana=as.data.frame(americana)
+americana_WPH=as.numeric(americana$trait_value)
+mean(americana_WPH, data=americana)
+```
+
+I will now find the mean whole plant height of Persea borbonia
+```{r}
+borbonia= Persea_borbonia_traits[c(3)]
+borbonia=as.data.frame(borbonia)
+borbonia_WPH=as.numeric(borbonia$trait_value)
+mean(borbonia_WPH, data=borbonia)
+```
+
+```{r}
+boxplot(americana_WPH)
+boxplot(borbonia_WPH)
+```
+The first boxplot is for whole plant height of Persea americana and the second boxplot is for whole plant height of Persea borbonia.
+
+Now I am going to do an unpaired t-test between the whole plant height data of Persea americana and Persea borbonia. 
+```{r}
+t.test(americana_WPH, borbonia_WPH)
+```
+The difference in whole plant height is significant between the two groups because the p-value is 1.284e-07. Since the p-value is less than 0.05, it indicates that the mean whole plant height of Persea americana is greater than the mean whole plant height of Persea borbonia. If the p-value was greater than 0.05, then I would conclude that any difference between the two mean whole plant heights was due to collection error and that there was no difference between the two mean plant height. However, since I got a p-value less than 0.05, I know that on average Persea americana has a greater plant height than Persea borbonia. 
+
