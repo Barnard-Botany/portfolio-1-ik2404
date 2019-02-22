@@ -12,7 +12,7 @@ library(maps) #Useful for making quick maps of occurrences
 library(sp) # A package for spatial data
 ```
 
-My species is Solanum pimpinellifolium (common name= currant tomato), which is the ancestor of the common tomato plant (Solanum lycopersicum). Below is a map of the range and occurrence. 
+My species is Solanum pimpinellifolium (common name= currant tomato), which is the ancestor of the common tomato plant (Solanum lycopersicum). Below is a map of the species range and occurrence. 
 ```{r}
 curranttomato_rangemap <- BIEN_ranges_load_species("Solanum_pimpinellifolium")
 Solanum_pimpinellifolium<- BIEN_occurrence_species(species = "Solanum pimpinellifolium")
@@ -20,7 +20,7 @@ map('world', fill=T, col="grey", bg="light blue", xlim=c(-180,-20), ylim=c(-60, 
 plot(curranttomato_rangemap, col="green", add=T)
 points(cbind(Solanum_pimpinellifolium$longitude, Solanum_pimpinellifolium$latitude), col="blue", pch=20, cex=1)
 ```
-This map is very similar to the one published on the NYBG and the BIEN website. In Tomatoland, the author traveled to South America (specifically Peru) to find Solanum pimpinellifolium and it makes sense because most of the Solanum pimpinellifolium is in that area.
+This map is very similar to the one published on the NYBG website, which I used for Portfolio 1.3. In Tomatoland, the author traveled to South America (specifically Peru) to find Solanum pimpinellifolium and that makes sense because most of the Solanum pimpinellifolium is in that area according to this map.
 
 My other species is Solanum lycopersicum, which is the common tomato plant. Below is a map of the range and occurrence.
 ```{r}
@@ -30,50 +30,50 @@ map('world', fill=T, col="grey", bg="light blue", xlim=c(-180,-20), ylim=c(-60, 
 plot(commontomato_rangemap, col="green", add=T)
 points(cbind(Solanum_lycopersicum$longitude, Solanum_lycopersicum$latitude), col="blue", pch=20, cex=1)
 ```
-WOAH! The range and occurrence for Solanum lycopersicum is so much wider than Solanum pimpinellifolium. This makes sense because the Solanum lycopersicum strain is the common tomato plant that everyone eats and it has been created so it can be domesticated worldwide. Solanum pimpinellifolium however can only grow in dry climates, which is why it's growth is mostly confined to South America. 
+WOAH! The range and occurrence for Solanum lycopersicum is so much wider than Solanum pimpinellifolium. This makes sense because Solanum lycopersicum is the common tomato plant that everyone eats and it has been created so it can be domesticated worldwide. Solanum pimpinellifolium however can only grow in dry climates, which is why it's growth is mostly confined to South America. 
 
 
 
 2. WORKING WITH TRAIT DATA
-The species I am studying are Persea americana and Persea borbonia. The trait I will be looking at is whole plant height, since there is a lot of data for whole plant height for both of these species (which will make it easier to make a decent boxplot)
+The species I am studying are Coffea arabica and Coffea canephora . The trait I will be looking at is whole plant height, since there are a lot of data for whole plant height for both of these species (which will make it easier to make a decent boxplot)
 ```{r}
-Persea_americana_traits <- BIEN_trait_traitbyspecies(trait = "whole plant height", species= "Persea americana")
-str(Persea_americana_traits)
-Persea_americana_traits
+Coffea_arabica_traits <- BIEN_trait_traitbyspecies(trait = "whole plant height", species= "Coffea arabica")
+str(Coffea_arabica_traits)
+Coffea_arabica_traits
 ```
 
 
 ```{r}
-Persea_borbonia_traits <- BIEN_trait_traitbyspecies(trait = "whole plant height", species= "Persea borbonia")
-str(Persea_borbonia_traits)
-Persea_borbonia_traits
+Coffea_canephora_traits <- BIEN_trait_traitbyspecies(trait = "whole plant height", species= "Coffea canephora")
+str(Coffea_canephora_traits)
+Coffea_canephora_traits
 ```
 
-I will now find the mean whole plant height of Persea americana
+I will now find the mean whole plant height of Coffea arabica
 ```{r}
-americana= Persea_americana_traits[c(3)]
-americana=as.data.frame(americana)
-americana_WPH=as.numeric(americana$trait_value)
-mean(americana_WPH, data=americana)
+arabica= Coffea_arabica_traits[c(3)]
+arabica=as.data.frame(arabica)
+arabica_WPH=as.numeric(arabica$trait_value)
+mean(arabica_WPH, data=arabica)
 ```
 
-I will now find the mean whole plant height of Persea borbonia
+I will now find the mean whole plant height of Coffea canephora
 ```{r}
-borbonia= Persea_borbonia_traits[c(3)]
-borbonia=as.data.frame(borbonia)
-borbonia_WPH=as.numeric(borbonia$trait_value)
-mean(borbonia_WPH, data=borbonia)
+canephora= Coffea_canephora_traits[c(3)]
+canephora=as.data.frame(canephora)
+canephora_WPH=as.numeric(canephora$trait_value)
+mean(canephora_WPH, data=canephora)
 ```
 
 ```{r}
-boxplot(americana_WPH)
-boxplot(borbonia_WPH)
+boxplot(arabica_WPH)
+boxplot(canephora_WPH)
 ```
-The first boxplot is for whole plant height of Persea americana and the second boxplot is for whole plant height of Persea borbonia.
+The first boxplot is for whole plant height of Coffea arabica and the second boxplot is for whole plant height of Coffea canephora. From the boxplot and mean data, it is evident that on average the mean whole plant height of Coffea canephora is greater than Coffea arabica. However to test if this difference is "real", I will do an unpaired t-test to confirm whether or not the difference between the two plant heights is due to random sampling or because it is "real."
 
-Now I am going to do an unpaired t-test between the whole plant height data of Persea americana and Persea borbonia. 
+Now I am going to do an unpaired t-test between the whole plant height data of Coffea arabica and Coffea canephora.
 ```{r}
-t.test(americana_WPH, borbonia_WPH)
+t.test(arabica_WPH, canephora_WPH)
 ```
-The difference in whole plant height is significant between the two groups because the p-value is 1.284e-07. Since the p-value is less than 0.05, it indicates that the mean whole plant height of Persea americana is greater than the mean whole plant height of Persea borbonia. If the p-value was greater than 0.05, then I would conclude that any difference between the two mean whole plant heights was due to collection error and that there was no difference between the two mean plant height. However, since I got a p-value less than 0.05, I know that on average Persea americana has a greater plant height than Persea borbonia. 
+The difference in whole plant height is significant between the two groups because the p-value is less than 2.2e-16. Since the p-value is less than 0.05, it indicates that the mean whole plant height of Coffea canephora is greater than the mean whole plant height of Coffea arabica. If the p-value was greater than 0.05, then I would conclude that any difference between the two mean whole plant heights was due to collection error and that there was no difference between the two mean plant height. However, since I got a p-value less than 0.05, I know that on average Coffea canephora has a greater plant height than Coffea arabica. 
 
